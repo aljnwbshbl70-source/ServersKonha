@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 // ==========================================
 // 1. إعداد قاعدة بياناتك المركزية
 // ==========================================
@@ -23,16 +24,20 @@ const centralFirebaseConfig = {
   "universe_domain": "googleapis.com"
 };
 
+// تم تعديل هذا السطر ليعالج النزول لسطر جديد تلقائياً لمنع توقف السيرفر على ريندر
+centralFirebaseConfig.private_key = centralFirebaseConfig.private_key.replace(/\\n/g, '\n');
+
 if (admin.apps.length === 0) {
     admin.initializeApp({
         credential: admin.credential.cert(centralFirebaseConfig)
     });
 }
 const dbCentral = admin.firestore();
+
 // ==========================================
 // 2. إعداد بوت التلجرام ولوحة التحكم الذكية
 // ==========================================
-const BOT_TOKEN = '8928251813:AAHHCgMXA-YJ8CXcWgLELVPsspOe-qsRgWc'; // 👈 ضع توكن البوت الخاص بك هنا
+const BOT_TOKEN = '8928251813:AAHHCgMXA-YJ8CXcWgLELVPsspOe-qsRgWc'; 
 const bot = new Telegraf(BOT_TOKEN);
 
 // جلسة مؤقتة لتخزين خطوات الإدخال في البوت لكل مستخدم
@@ -148,7 +153,6 @@ bot.on('text', async (ctx) => {
     const text = ctx.message.text.trim();
 
     if (!session) {
-        // إذا قام بإرسال الكود مباشرة دون استخدام الأزرار
         if (text.includes('firebaseConfig')) {
             ctx.reply('❌ يرجى استخدام زر "➕ إضافة بنك جديد" لاتباع نظام الحماية ومنع تكرار البيانات المرفوعة.');
         }
@@ -157,7 +161,6 @@ bot.on('text', async (ctx) => {
 
     // الخطوة 1: استقبال اسم البنك
     if (session.step === 'awaiting_bank_name') {
-        // فحص تكرار اسم البنك لمنع السبام
         const dupCheck = await dbCentral.collection('registered_banks').where('bankName', '==', text).get();
         if (!dupCheck.empty) {
             return ctx.reply('❌ هذا البنك مسجل مسبقاً في النظام! الرجاء اختيار اسم آخر أو إدارة البنك الحالي.');
@@ -177,18 +180,21 @@ bot.on('text', async (ctx) => {
 
         const bankId = config.projectId;
 
-        // فحص تكرار مشروع الفايربيس لمنع السبام
         const idCheck = await dbCentral.collection('registered_banks').doc(bankId).get();
         if (idCheck.exists) {
             delete userSessions[userId];
             return ctx.reply('⚠️ هذه القاعدة تابعة لبنك مسجل ومحمي مسبقاً في السيرفر! تم حظر عملية التكرار.');
         }
 
-        // تسجيل البنك في الوضع الافتراضي (وضع اختبار) ومصفوفة دومينات فارغة
+        // إدخال ومعالجة مفتاح البنك المستهدف بشكل آمن قبل التأسيس
+        if (config.privateKey) {
+             config.privateKey = config.privateKey.replace(/\\n/g, '\n');
+        }
+
         await dbCentral.collection('registered_banks').doc(bankId).set({
             bankName: session.bankName,
             firebaseConfig: config,
-            mode: 'test', // يبدأ دائماً بوضع اختبار لتجربته
+            mode: 'test', 
             allowedDomains: [],
             createdAt: admin.firestore.FieldValue.serverTimestamp()
         });
@@ -200,7 +206,7 @@ bot.on('text', async (ctx) => {
     // خطوة إضافة دومين (رابط معتمد) للبنك
     if (session.step === 'awaiting_domain') {
         const bankId = session.bankId;
-        let formattedDomain = text.toLowerCase().replace(/\/$/, ""); // إزالة الفواصل النهائية وتوحيد الأحرف
+        let formattedDomain = text.toLowerCase().replace(/\/$/, ""); 
 
         const docRef = dbCentral.collection('registered_banks').doc(bankId);
         const doc = await docRef.get();
@@ -235,17 +241,14 @@ bot.action(/^delete_bank:(.+)$/, async (ctx) => {
 // 3. مسارات الحماية والبث عبر السيرفر (Express)
 // ==========================================
 
-// 🔄 مسار الاستيقاظ والنشاط الفوري لـ Cron-job.org لمنع النوم
 app.get('/ping', (req, res) => {
     res.status(200).send('ok');
 });
 
-// 🛡️ نقطة التفتيش الذكية والفرز المركزي للبنوك
 app.post('/api/:bankId/secure-action', async (req, res) => {
     const { bankId } = req.params;
     const clientData = req.body;
     
-    // جلب الـ Origin الموثق تلقائياً من المتصفح
     const clientOrigin = req.headers.origin || req.headers.referer || "";
     const cleanOrigin = clientOrigin.toLowerCase().replace(/\/$/, "");
 
@@ -257,10 +260,8 @@ app.post('/api/:bankId/secure-action', async (req, res) => {
 
         const bankData = bankDoc.data();
 
-        // 🛑 الفحص الأمني 1: إذا كان البنك في الوضع الرسمي، نقوم بفحص الدومينات الصارم
         if (bankData.mode === 'official') {
             const allowed = bankData.allowedDomains || [];
-            // تفتيش: هل الرابط الحالي موجود ضمن قائمة الروابط المحددة في البوت؟
             const isMatch = allowed.some(domain => cleanOrigin.startsWith(domain));
             
             if (!isMatch) {
@@ -270,11 +271,9 @@ app.post('/api/:bankId/secure-action', async (req, res) => {
                 });
             }
         } 
-        // 💡 ملاحظة: إذا كان في وضع الاختبار (test)، يتخطى هذا الشرط ويسمح لكل المواقع بالعبور للتجربة والتحقق.
 
-        // 🛑 الفحص الأمني 2: تفتيش "طلب الزيارة" الزمني
         if (clientData.actionType === 'request_visit') {
-            const currentDay = new Date().getUTCDay(); // 4=الخميس, 5=الجمعة, 6=السبت
+            const currentDay = new Date().getUTCDay(); 
             if (![4, 5, 6].includes(currentDay)) {
                 return res.status(403).json({ 
                     success: false, 
@@ -283,7 +282,6 @@ app.post('/api/:bankId/secure-action', async (req, res) => {
             }
         }
 
-        // 🚀 تمرير البيانات إلى فايربيس البنك المستهدف بعد اجتياز التفتيش بنجاح
         let targetApp;
         if (admin.apps.some(app => app.name === bankId)) {
             targetApp = admin.app(bankId);
@@ -307,7 +305,6 @@ app.post('/api/:bankId/secure-action', async (req, res) => {
     }
 });
 
-// تشغيل المشروع الموحد
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`System running on port ${PORT}`);
@@ -316,4 +313,4 @@ app.listen(PORT, () => {
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-  
+                                                       
