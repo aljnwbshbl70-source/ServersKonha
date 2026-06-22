@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const { Telegraf, Markup } = require('telegraf');
@@ -8,43 +9,15 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================
-// 1. إعادة بناء المفتاح السري برمجياً بدقة كاملة
+// 1. إعداد قاعدة البيانات بقراءة الملف المرفوع (بدقة 100%)
 // ==========================================
-let finalPrivateKey = "";
-
-if (process.env.KEY_START && process.env.KEY_MID && process.env.KEY_END) {
-    // تجميع الأجزاء بدقة وإضافة الشرطات والنزول لسطر حقيقي داخلياً
-    finalPrivateKey = [
-        "-----BEGIN PRIVATE KEY-----",
-        process.env.KEY_START,
-        process.env.KEY_MID,
-        process.env.KEY_END,
-        "-----END PRIVATE KEY-----"
-    ].join("\n");
-}
-
-const centralFirebaseConfig = {
-  "type": "service_account",
-  "project_id": "servers-41539",
-  "private_key_id": "78ba10e79097a31d5531346eb4cda8f313511e02",
-  "private_key": finalPrivateKey, 
-  "client_email": "firebase-adminsdk-fbsvc@servers-41539.iam.gserviceaccount.com",
-  "client_id": "111488255338308493525",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40servers-41539.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-};
+// نقرأ الملف من المسار الذي يوفره Render في Secret Files
+const serviceAccount = JSON.parse(fs.readFileSync('/etc/secrets/serviceAccountKey.json', 'utf8'));
 
 if (admin.apps.length === 0) {
-    if (centralFirebaseConfig.private_key) {
-        admin.initializeApp({
-            credential: admin.credential.cert(centralFirebaseConfig)
-        });
-    } else {
-        console.error("Firebase Key Assembly Failed: Variables are missing.");
-    }
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount)
+    });
 }
 const dbCentral = admin.firestore();
 
