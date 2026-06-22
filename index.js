@@ -8,25 +8,26 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================
-// 1. إعداد قاعدة بياناتك المركزية (نظام حماية مائي)
+// 1. إعادة بناء المفتاح السري برمجياً بدقة كاملة
 // ==========================================
-let privateKeyDecoded = "";
+let finalPrivateKey = "";
 
-if (process.env.FIREBASE_PRIVATE_KEY_BASE64) {
-    try {
-        // فك تشفير النص الصلب لمنع مشاكل الحروف والمسافات والنزول لسطر جديد تماماً
-        const rawKey = Buffer.from(process.env.FIREBASE_PRIVATE_KEY_BASE64, 'base64').toString('utf8');
-        privateKeyDecoded = rawKey.replace(/\\n/g, '\n');
-    } catch (err) {
-        console.error("Error decoding Base64 key: ", err);
-    }
+if (process.env.KEY_START && process.env.KEY_MID && process.env.KEY_END) {
+    // تجميع الأجزاء بدقة وإضافة الشرطات والنزول لسطر حقيقي داخلياً
+    finalPrivateKey = [
+        "-----BEGIN PRIVATE KEY-----",
+        process.env.KEY_START,
+        process.env.KEY_MID,
+        process.env.KEY_END,
+        "-----END PRIVATE KEY-----"
+    ].join("\n");
 }
 
 const centralFirebaseConfig = {
   "type": "service_account",
   "project_id": "servers-41539",
   "private_key_id": "78ba10e79097a31d5531346eb4cda8f313511e02",
-  "private_key": privateKeyDecoded, // المفتاح المحمي والنظيف جاهز للقراءة الكاملة
+  "private_key": finalPrivateKey, 
   "client_email": "firebase-adminsdk-fbsvc@servers-41539.iam.gserviceaccount.com",
   "client_id": "111488255338308493525",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -42,10 +43,12 @@ if (admin.apps.length === 0) {
             credential: admin.credential.cert(centralFirebaseConfig)
         });
     } else {
-        console.error("Firebase Admin SDK cannot start: private_key is blank!");
+        console.error("Firebase Key Assembly Failed: Variables are missing.");
     }
 }
 const dbCentral = admin.firestore();
+
+// [باقي كود البوت يستمر من هنا دون تعديل...]
 
 // [باقي كود البوت والـ Express الخاص بك يستمر من هنا دون تعديل...];
 
