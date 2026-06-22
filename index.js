@@ -24,10 +24,11 @@ const centralFirebaseConfig = {
   "universe_domain": "googleapis.com"
 };
 
-// معالجة النزول لسطر جديد تلقائياً لمنع توقف السيرفر على ريندر
+// معالجة النزول لسطر جديد تلقائياً بأي صيغة كانت لمنع توقف السيرفر على ريندر
 if (centralFirebaseConfig.private_key) {
     centralFirebaseConfig.private_key = centralFirebaseConfig.private_key.replace(/\\n/g, '\n');
 }
+
 
 if (admin.apps.length === 0) {
     admin.initializeApp({
