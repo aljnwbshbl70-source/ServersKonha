@@ -4,14 +4,7 @@ const cors = require('cors');
 const { Telegraf, Markup } = require('telegraf');
 const admin = require('firebase-admin');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// ==========================================
-// 1. إعداد قاعدة البيانات بقراءة الملف المرفوع (بدقة 100%)
-// ==========================================
-// نقرأ الملف من المسار الذي يوفره Render في Secret Files
+// نقرأ المفتاح من ملف الـ JSON الذي رفعناه في Secret Files مباشرة
 const serviceAccount = JSON.parse(fs.readFileSync('/etc/secrets/serviceAccountKey.json', 'utf8'));
 
 if (admin.apps.length === 0) {
@@ -21,9 +14,7 @@ if (admin.apps.length === 0) {
 }
 const dbCentral = admin.firestore();
 
-// [باقي كود البوت يستمر من هنا دون تعديل...]
-
-// [باقي كود البوت والـ Express الخاص بك يستمر من هنا دون تعديل...];
+// ... باقي كود البوت كما هو ...
 
 // ==========================================
 // 2. إعداد بوت التلجرام ولوحة التحكم الذكية
