@@ -8,13 +8,13 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================
-// 1. إعداد قاعدة بياناتك المركزية (المفتاح الجديد)
+// 1. إعداد قاعدة بياناتك المركزية (سحب آمن للمفتاح)
 // ==========================================
 const centralFirebaseConfig = {
   "type": "service_account",
   "project_id": "servers-41539",
   "private_key_id": "78ba10e79097a31d5531346eb4cda8f313511e02",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKkwggSkAgEAAoIBAQDtn3mKd9r2lxlR\ne9qszV1//fxVj1GGQ8jae0LaGx8h1PT5ScQsWNO0MMJ/DuJqGJ6qK1ruDlpMzC3Z\n5RkpRC8UIHToSgaLeoOak/zkwLa7M4BlmMACClcrJj3kO/aUe1Nlk3E2Y+Bq1py6\n+BZjz8BQQJa+/KnItx448uZXlAHo1uTIIYK6s+VOGETEE51L2p51caBxUomcoJhr\nFyM8WXgL94CJ6WHlFcwOkam0TEbmvVjhBQNrsIkqpT3d/N2bxXCizqyqr2O3dyUb\nSlC54mop08kiQrtq3FrnMwl9Y3ELyETpKu/JxOzsROrrEB18iFN6xv5yYn9tEfRm\njh7rJssbAgMBAAECggEAU6b6Myh5kajk1V48P+w2N8pSrE49fX5cdanCAaVdotvk\n9+Ojp5cHxF4MAo3bYE1VggOsSbUMzg9tLtGrt27VAglhDquMvUp+jQr/EwrS6Xk6\ngMmzAqTgRgT68d+4MVJvLAmpZ+PmS8ZMu7d9rlqjUb1DNG4fWVU50wOT2o301CIx\nFUMaC2jgnjpNOID+OTjabAwoiecFbmkRSa0VNIPwOnOo0KwIH7WCSoeNjmshnp/s\nWil8f9XbWWbiFOb/TMuFkTrTT3+tvmUu2D0Gjolg5sm1yOC/lxPd1K93HZD2MThi\n6BLRbPxv+jF4ISR7sGZzN5WVf+c7TOyAyj61is4NVQKBgQD3JA0ouvc9qVKdb/+d\nUtfHBzCl9p1PkGPhfICBRvht6cfF9jHmCxWRLKa7Dnczxh2ymiVjXyhoXMLhE3cd\nIQJ6hnwXIqxhBX3PUv3YaEqDo1Q6pZ2+FLhSDCCEYkUNpteX3fnDwJGTfxuXozgX\nZ/pahlH5pCaY4ptmql2onxkBTwKBgQD2JBSJatdj5W3Ub4Kt699mRRNtu3DjgXoV\ngtZQRk+uzdeGM1P3cOd7AtR6h3GqbzRhOGaSfd9yEtZeMQrjy2/D+fRAY3enZwyn\n8AjjC1np6GWCEGL2q3U664kSOUg71dLmCdjTfhTJNJm300TFebhkFfl/cZG4R7kj\nVVi54HMudQKBgFd71IipfmG+cXc3sTVgoO9cNTVakh8bDrBAIUEh/UjzK3uBBfLX\n05+bPb4ThdC2/cY+WKPPiH9A7t87w7t09uqmdoC+DmUdy4Y7a45ShKYKiANmousp\nbIHmtxAFtUn62HBy7DoGDcI3iW3pIi7u6KloyNXk7KDL/pSeFB9fijtzAoGBAOxJ\nLJHSR9y1BV8WgQt20Cl8DC+d7bvosort49CB/sJfBhPlOCjkcMLMr67EUSB8ynq9\nyvG79gGrBbC8Qaj1xWALlictlVLVgPfCXLWgUvtRxgg6tNX5OHuMWjRtWuNd26xL\nLaOxeEDCxwIJxQ4RUCp8Udu+6VVPPPInXxpo1gl1AoGBALaswXvHfoV58cn+NTVA\n2b4/gIY0Cmf4iDpneMNE2DpSPFWvZYZaF749P05PWSHPoL3EsOjZZp/MHTaL81t/\n0FnL3zLI4zjLhEulMVPOjE9Ap/LAG5EHuUqIYOL0yuM+hwCZG60BZbSQp66Rrb9n\nBRQQqmSNa12aSSFtkXmnkpcs\n-----END PRIVATE KEY-----\n",
+  "private_key": process.env.FIREBASE_PRIVATE_KEY, // هنا سيقوم بسحب المفتاح بأمان من ريندر
   "client_email": "firebase-adminsdk-fbsvc@servers-41539.iam.gserviceaccount.com",
   "client_id": "111488255338308493525",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -25,7 +25,9 @@ const centralFirebaseConfig = {
 };
 
 // معالجة النزول لسطر جديد تلقائياً لمنع توقف السيرفر على ريندر
-centralFirebaseConfig.private_key = centralFirebaseConfig.private_key.replace(/\\n/g, '\n');
+if (centralFirebaseConfig.private_key) {
+    centralFirebaseConfig.private_key = centralFirebaseConfig.private_key.replace(/\\n/g, '\n');
+}
 
 if (admin.apps.length === 0) {
     admin.initializeApp({
