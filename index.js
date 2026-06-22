@@ -1,11 +1,7 @@
-const fs = require('fs');
-const express = require('express');
-const cors = require('cors');
-const { Telegraf, Markup } = require('telegraf');
 const admin = require('firebase-admin');
 
-// نقرأ المفتاح من ملف الـ JSON الذي رفعناه في Secret Files مباشرة
-const serviceAccount = JSON.parse(fs.readFileSync('/etc/secrets/serviceAccountKey.json', 'utf8'));
+// Railway سيقوم بتزويدنا بهذا المتغير (سنتعلمه في الخطوة 3)
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 if (admin.apps.length === 0) {
     admin.initializeApp({
