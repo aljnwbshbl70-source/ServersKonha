@@ -8,13 +8,25 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================
-// 1. إعداد قاعدة بياناتك المركزية (سحب آمن للمفتاح)
+// 1. إعداد قاعدة بياناتك المركزية (نظام حماية مائي)
 // ==========================================
+let privateKeyDecoded = "";
+
+if (process.env.FIREBASE_PRIVATE_KEY_BASE64) {
+    try {
+        // فك تشفير النص الصلب لمنع مشاكل الحروف والمسافات والنزول لسطر جديد تماماً
+        const rawKey = Buffer.from(process.env.FIREBASE_PRIVATE_KEY_BASE64, 'base64').toString('utf8');
+        privateKeyDecoded = rawKey.replace(/\\n/g, '\n');
+    } catch (err) {
+        console.error("Error decoding Base64 key: ", err);
+    }
+}
+
 const centralFirebaseConfig = {
   "type": "service_account",
   "project_id": "servers-41539",
   "private_key_id": "78ba10e79097a31d5531346eb4cda8f313511e02",
-  "private_key": process.env.FIREBASE_PRIVATE_KEY, // هنا سيقوم بسحب المفتاح بأمان من ريندر
+  "private_key": privateKeyDecoded, // المفتاح المحمي والنظيف جاهز للقراءة الكاملة
   "client_email": "firebase-adminsdk-fbsvc@servers-41539.iam.gserviceaccount.com",
   "client_id": "111488255338308493525",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -24,18 +36,18 @@ const centralFirebaseConfig = {
   "universe_domain": "googleapis.com"
 };
 
-// معالجة النزول لسطر جديد تلقائياً بأي صيغة كانت لمنع توقف السيرفر على ريندر
-if (centralFirebaseConfig.private_key) {
-    centralFirebaseConfig.private_key = centralFirebaseConfig.private_key.replace(/\\n/g, '\n');
-}
-
-
 if (admin.apps.length === 0) {
-    admin.initializeApp({
-        credential: admin.credential.cert(centralFirebaseConfig)
-    });
+    if (centralFirebaseConfig.private_key) {
+        admin.initializeApp({
+            credential: admin.credential.cert(centralFirebaseConfig)
+        });
+    } else {
+        console.error("Firebase Admin SDK cannot start: private_key is blank!");
+    }
 }
 const dbCentral = admin.firestore();
+
+// [باقي كود البوت والـ Express الخاص بك يستمر من هنا دون تعديل...];
 
 // ==========================================
 // 2. إعداد بوت التلجرام ولوحة التحكم الذكية
