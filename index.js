@@ -8,13 +8,13 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================
-// 1. إعداد قاعدة بياناتك المركزية
+// 1. إعداد قاعدة بياناتك المركزية (المفتاح الجديد)
 // ==========================================
 const centralFirebaseConfig = {
   "type": "service_account",
   "project_id": "servers-41539",
-  "private_key_id": "2ed39c24a393883494e2d04df648106bf6bb3e36",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDt0UJnHwiv3F4J\nL9G1D0qxGeMKU9o0MbJjhhdDO+gt+Fvkxpesl9nEc2XMHUBAupkYezmcVaR39LiN\n3I7GO24wNUabDCLyyRBm/bKLJkSVTAgQQKE52UMEuG4im4K7EBx9h+BFJ5HnXpzr\ntBAktUxzYeINqk2d8KQ/PnF+47jF/0dHEyhCunxzUqMuY5IbSNf6zgnpnoZMOijS\ngG5FN2BhBVjJBf470U+oLqLoRV/bAMhPn8Na1rGnMYC9sRLsgpCVnuZnhAcKv7eM\nQss3677hJXeCpGedrenvMroeXdnc9l3T/PvDX0xVznpBJ/Jx1ZzeD0SgeHXgvKpI\nAp1cmpD7AgMBAAECggEAEpP3VlZJTRuvnj4bFBmMDIZo2G9b1hn6b+XovqWDv3Dt\nv33NbtE0qjEYRw1omJCQfHtxMQehCodBPOvO8ijFtIRk7fXRFnBN6g3FkIiTxlSj\nM0nT49CszfCZF0uuDG5MxiMC38QglMItC14MqMwfmx/kEzc2SwaifhejBsuZV/Yx\nDd6PPJtLm2KWGXQMwoNO964mW86YmiXvOIWYEK+/ewrCGU2aIeDkfalZvVnss/oO\nxDvW1Y0thW8OjevdThMqoygSU1/Cq8OkCDo/9bOZXqO2ab+TOwnZJbhuOTcK/hZ5\noIJivQhqavlxKK3diTA9ZoCdmmf1MdL24vUbCJN3iQKBgQD5v1If30DJGH0H1qpu\nCZyvjVLZ8dScU63z5XGotYLSRGabsxyhzfINdTrv+K8QPPtLwJuf2oG6qgu3qDsB\nJpUIKWQLpKnRTKAPpOt7jhBfO2jQ6tKHceAp26KENCphJSiFCZT8BOiF8hNvA1vf\nTh7LZey9M4micpFOT/ZDuyUiNwKBgQDzxXo0yH0bWB/jLb8QX3lhbpNNvRqVAvAt\nmkt/DzTOHBusTFA6s/VxCoHa1jPJA3Cjw2fs1AUjqUNjVAtZ5cXlC8WBkP6tPaqX\nfhY22P+sI/UrIO3pcOd+IITDPeSn8qa1Y52XEPYtaPzsxEV4z2LzM3aDNR4uqfLa\nduPl31Z1XQKBgQDR2i0LkvBBCU6l836pj3IVIM7pSwa3hKi6M6VZeYs/WzJMyifY\n3c/x9vtbAL85CcSuVl1t6JDxZEkMPVO3F9BKV101W1tF/vjPrGgiHbEsFCNyyJ22\nKb2N7nuUUrD5h9uQTgjd6tHnGw2xTkU4UdAWYMKYCGIyGcp230Gyj+IX6QKBgQCl\nCePM7JfW9XjRQ92BZkI1drl//jGLBSw6k6XdZhwoFtudcSU4OTJI0AZOdIsm4o9W\nMCuiKYE5PZWEIBh3SpsKkUesitAB1igy3IiJpayjjMyl4GtyiqAPwlBgJv0xv5Si\nZckBx9gDsnraiZ9HRZEGeqcX+dRvX1wuECQHM4fDeQKBgQCDHKcCAMv19pEdNbck\ndXdruHXZQsLovf/cwpiM7LLKalDs25DbTX1AQJb9PJjiVmdYs0y4dj7wFdZOONEk\nf8mSjMaxUlFA4lX37Ff8pJ0OxFHdYmj2MaGxnFfCZRrECdA3d7Dz4ETdiZzb5DP+\nqeRbS88/+CQTd3OMY4dw3spUNw==\n-----END PRIVATE KEY-----\n",
+  "private_key_id": "78ba10e79097a31d5531346eb4cda8f313511e02",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKkwggSkAgEAAoIBAQDtn3mKd9r2lxlR\ne9qszV1//fxVj1GGQ8jae0LaGx8h1PT5ScQsWNO0MMJ/DuJqGJ6qK1ruDlpMzC3Z\n5RkpRC8UIHToSgaLeoOak/zkwLa7M4BlmMACClcrJj3kO/aUe1Nlk3E2Y+Bq1py6\n+BZjz8BQQJa+/KnItx448uZXlAHo1uTIIYK6s+VOGETEE51L2p51caBxUomcoJhr\nFyM8WXgL94CJ6WHlFcwOkam0TEbmvVjhBQNrsIkqpT3d/N2bxXCizqyqr2O3dyUb\nSlC54mop08kiQrtq3FrnMwl9Y3ELyETpKu/JxOzsROrrEB18iFN6xv5yYn9tEfRm\njh7rJssbAgMBAAECggEAU6b6Myh5kajk1V48P+w2N8pSrE49fX5cdanCAaVdotvk\n9+Ojp5cHxF4MAo3bYE1VggOsSbUMzg9tLtGrt27VAglhDquMvUp+jQr/EwrS6Xk6\ngMmzAqTgRgT68d+4MVJvLAmpZ+PmS8ZMu7d9rlqjUb1DNG4fWVU50wOT2o301CIx\nFUMaC2jgnjpNOID+OTjabAwoiecFbmkRSa0VNIPwOnOo0KwIH7WCSoeNjmshnp/s\nWil8f9XbWWbiFOb/TMuFkTrTT3+tvmUu2D0Gjolg5sm1yOC/lxPd1K93HZD2MThi\n6BLRbPxv+jF4ISR7sGZzN5WVf+c7TOyAyj61is4NVQKBgQD3JA0ouvc9qVKdb/+d\nUtfHBzCl9p1PkGPhfICBRvht6cfF9jHmCxWRLKa7Dnczxh2ymiVjXyhoXMLhE3cd\nIQJ6hnwXIqxhBX3PUv3YaEqDo1Q6pZ2+FLhSDCCEYkUNpteX3fnDwJGTfxuXozgX\nZ/pahlH5pCaY4ptmql2onxkBTwKBgQD2JBSJatdj5W3Ub4Kt699mRRNtu3DjgXoV\ngtZQRk+uzdeGM1P3cOd7AtR6h3GqbzRhOGaSfd9yEtZeMQrjy2/D+fRAY3enZwyn\n8AjjC1np6GWCEGL2q3U664kSOUg71dLmCdjTfhTJNJm300TFebhkFfl/cZG4R7kj\nVVi54HMudQKBgFd71IipfmG+cXc3sTVgoO9cNTVakh8bDrBAIUEh/UjzK3uBBfLX\n05+bPb4ThdC2/cY+WKPPiH9A7t87w7t09uqmdoC+DmUdy4Y7a45ShKYKiANmousp\nbIHmtxAFtUn62HBy7DoGDcI3iW3pIi7u6KloyNXk7KDL/pSeFB9fijtzAoGBAOxJ\nLJHSR9y1BV8WgQt20Cl8DC+d7bvosort49CB/sJfBhPlOCjkcMLMr67EUSB8ynq9\nyvG79gGrBbC8Qaj1xWALlictlVLVgPfCXLWgUvtRxgg6tNX5OHuMWjRtWuNd26xL\nLaOxeEDCxwIJxQ4RUCp8Udu+6VVPPPInXxpo1gl1AoGBALaswXvHfoV58cn+NTVA\n2b4/gIY0Cmf4iDpneMNE2DpSPFWvZYZaF749P05PWSHPoL3EsOjZZp/MHTaL81t/\n0FnL3zLI4zjLhEulMVPOjE9Ap/LAG5EHuUqIYOL0yuM+hwCZG60BZbSQp66Rrb9n\nBRQQqmSNa12aSSFtkXmnkpcs\n-----END PRIVATE KEY-----\n",
   "client_email": "firebase-adminsdk-fbsvc@servers-41539.iam.gserviceaccount.com",
   "client_id": "111488255338308493525",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -24,7 +24,7 @@ const centralFirebaseConfig = {
   "universe_domain": "googleapis.com"
 };
 
-// تم تعديل هذا السطر ليعالج النزول لسطر جديد تلقائياً لمنع توقف السيرفر على ريندر
+// معالجة النزول لسطر جديد تلقائياً لمنع توقف السيرفر على ريندر
 centralFirebaseConfig.private_key = centralFirebaseConfig.private_key.replace(/\\n/g, '\n');
 
 if (admin.apps.length === 0) {
@@ -40,10 +40,8 @@ const dbCentral = admin.firestore();
 const BOT_TOKEN = '8928251813:AAHHCgMXA-YJ8CXcWgLELVPsspOe-qsRgWc'; 
 const bot = new Telegraf(BOT_TOKEN);
 
-// جلسة مؤقتة لتخزين خطوات الإدخال في البوت لكل مستخدم
 const userSessions = {};
 
-// دالة تفكيك كود الفايربيس المستخرج تلقائياً من النص
 function extractFirebaseConfig(htmlContent) {
     const configRegex = /const\s+firebaseConfig\s*=\s*\{([\s\S]*?)\};/;
     const match = htmlContent.match(configRegex);
@@ -57,7 +55,6 @@ function extractFirebaseConfig(htmlContent) {
     } catch (e) { return null; }
 }
 
-// قائمة التحكم الرئيسية
 bot.start((ctx) => {
     ctx.reply('🌋 أهلاً بك في لوحة تحكم ماغما المتقدمة لإدارة البنوك والحماية سحابياً.',
         Markup.keyboard([
@@ -66,7 +63,6 @@ bot.start((ctx) => {
     );
 });
 
-// عرض البنوك الحالية مع إيموجي الحالة (🔗 آمن / ⛓️‍💥 مكشوف)
 bot.hears('📋 عرض البنوك والسيرفرات', async (ctx) => {
     try {
         const snapshot = await dbCentral.collection('registered_banks').get();
@@ -87,7 +83,6 @@ bot.hears('📋 عرض البنوك والسيرفرات', async (ctx) => {
     }
 });
 
-// نافذة إدارة البنك عند الضغط على زر البنك
 bot.action(/^manage_bank:(.+)$/, async (ctx) => {
     const bankId = ctx.match[1];
     try {
@@ -104,20 +99,14 @@ bot.action(/^manage_bank:(.+)$/, async (ctx) => {
                      `🚀 *رابط سيرفر ريندر المولد لك:*\n\`https://${ctx.host || 'magma-api.onrender.com'}/api/${bankId}/secure-action\``;
 
         const inlineKeyboard = [
-            [
-                Markup.button.callback(`🔄 تبديل إلى: ${data.mode === 'official' ? 'وضع الاختبار' : 'الوضع الرسمي'}`, `toggle_mode:${bankId}`),
-            ],
-            [
-                Markup.button.callback('➕ إضافة دومين (رابط)', `add_domain_prompt:${bankId}`),
-                Markup.button.callback('🗑️ حذف البنك', `delete_bank:${bankId}`)
-            ]
+            [Markup.button.callback(`🔄 تبديل إلى: ${data.mode === 'official' ? 'وضع الاختبار' : 'الوضع الرسمي'}`, `toggle_mode:${bankId}`)],
+            [Markup.button.callback('➕ إضافة دومين (رابط)', `add_domain_prompt:${bankId}`), Markup.button.callback('🗑️ حذف البنك', `delete_bank:${bankId}`)]
         ];
 
         ctx.editMessageText(text, { parse_mode: 'Markdown', ...Markup.inlineKeyboard(inlineKeyboard) });
     } catch (e) { ctx.reply('❌ خطأ في معالجة الطلب.'); }
 });
 
-// التبديل بين وضع الاختبار والوضع الرسمي
 bot.action(/^toggle_mode:(.+)$/, async (ctx) => {
     const bankId = ctx.match[1];
     const doc = await dbCentral.collection('registered_banks').doc(bankId).get();
@@ -128,25 +117,20 @@ bot.action(/^toggle_mode:(.+)$/, async (ctx) => {
 
     await dbCentral.collection('registered_banks').doc(bankId).update({ mode: newMode });
     ctx.answerCbQuery(`تم التغيير إلى ${newMode === 'official' ? 'الوضع الرسمي 🔴' : 'وضع الاختبار 🟡'}`);
-    
-    // إعادة تحديث الواجهة
     ctx.reply(`✅ تم تحديث وضع تشغيل البنك بنجاح.`);
 });
 
-// طلب إضافة رابط (دومين) جديد
 bot.action(/^add_domain_prompt:(.+)$/, (ctx) => {
     const bankId = ctx.match[1];
     userSessions[ctx.from.id] = { step: 'awaiting_domain', bankId: bankId };
     ctx.reply('🌐 من فضلك أرسل الرابط الرسمي للبنك الآن (مثال: https://magma-bank.com) لمنع التكرار والسبام:');
 });
 
-// استقبال طلب إضافة بنك جديد
 bot.hears('➕ إضافة بنك جديد', (ctx) => {
     userSessions[ctx.from.id] = { step: 'awaiting_bank_name' };
     ctx.reply('📝 حسناً، أرسل لي اسم البنك الجديد أولاً:');
 });
 
-// معالج النصوص والمدخلات التسلسلية (منع السبام والتكرار والتحقق)
 bot.on('text', async (ctx) => {
     const userId = ctx.from.id;
     const session = userSessions[userId];
@@ -159,7 +143,6 @@ bot.on('text', async (ctx) => {
         return;
     }
 
-    // الخطوة 1: استقبال اسم البنك
     if (session.step === 'awaiting_bank_name') {
         const dupCheck = await dbCentral.collection('registered_banks').where('bankName', '==', text).get();
         if (!dupCheck.empty) {
@@ -171,7 +154,6 @@ bot.on('text', async (ctx) => {
         return ctx.reply(`👍 تم اعتماد الاسم: *${text}*\nالآن أرسل كود الـ HTML البرمجي كاملاً (الذي يحتوي على الفايربيس الرسمي غير المستخرج المفاتيح):`, { parse_mode: 'Markdown' });
     }
 
-    // الخطوة 2: استقبال الكود واستخراج البيانات وتأسيس البنك
     if (session.step === 'awaiting_html_script') {
         const config = extractFirebaseConfig(text);
         if (!config || !config.projectId) {
@@ -186,7 +168,6 @@ bot.on('text', async (ctx) => {
             return ctx.reply('⚠️ هذه القاعدة تابعة لبنك مسجل ومحمي مسبقاً في السيرفر! تم حظر عملية التكرار.');
         }
 
-        // إدخال ومعالجة مفتاح البنك المستهدف بشكل آمن قبل التأسيس
         if (config.privateKey) {
              config.privateKey = config.privateKey.replace(/\\n/g, '\n');
         }
@@ -203,7 +184,6 @@ bot.on('text', async (ctx) => {
         ctx.reply(`🎉 تم إنشاء البنك بنجاح!\n\n📌 *اسم البنك:* ${session.bankName}\n🆔 *معرف القاعدة:* ${bankId}\n🟡 *الوضع الحالي:* وضع الاختبار (مسموح من كل المواقع للتجربة).\n\nاضغط على عرض البنوك لإدارته وإضافة الدومينات الرسمية وتحويله لوضع رسمي.`, { parse_mode: 'Markdown' });
     }
 
-    // خطوة إضافة دومين (رابط معتمد) للبنك
     if (session.step === 'awaiting_domain') {
         const bankId = session.bankId;
         let formattedDomain = text.toLowerCase().replace(/\/$/, ""); 
@@ -228,7 +208,6 @@ bot.on('text', async (ctx) => {
     }
 });
 
-// حذف بنك نهائياً
 bot.action(/^delete_bank:(.+)$/, async (ctx) => {
     const bankId = ctx.match[1];
     await dbCentral.collection('registered_banks').doc(bankId).delete();
@@ -236,11 +215,9 @@ bot.action(/^delete_bank:(.+)$/, async (ctx) => {
     ctx.reply('🗑️ تم إزالة البنك وإلغاء توجيه سيرفر ريندر الخاص به بنجاح.');
 });
 
-
 // ==========================================
 // 3. مسارات الحماية والبث عبر السيرفر (Express)
 // ==========================================
-
 app.get('/ping', (req, res) => {
     res.status(200).send('ok');
 });
@@ -265,20 +242,14 @@ app.post('/api/:bankId/secure-action', async (req, res) => {
             const isMatch = allowed.some(domain => cleanOrigin.startsWith(domain));
             
             if (!isMatch) {
-                return res.status(403).json({ 
-                    success: false, 
-                    message: "⚠️ رفض تفتيش أمني: هذا النطاق أو الموقع غير مصرح له باستخدام سيرفر الحماية المالي هذا!" 
-                });
+                return res.status(403).json({ success: false, message: "⚠️ رفض تفتيش أمني: هذا النطاق غير مصرح له!" });
             }
         } 
 
         if (clientData.actionType === 'request_visit') {
             const currentDay = new Date().getUTCDay(); 
             if (![4, 5, 6].includes(currentDay)) {
-                return res.status(403).json({ 
-                    success: false, 
-                    message: "🚫 النظام مغلق اليوم، خيار طلب الزيارة متاح فقط أيام الخميس والجمعة والسبت." 
-                });
+                return res.status(403).json({ success: false, message: "🚫 النظام مغلق اليوم." });
             }
         }
 
@@ -313,4 +284,4 @@ app.listen(PORT, () => {
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-                                                       
+                
